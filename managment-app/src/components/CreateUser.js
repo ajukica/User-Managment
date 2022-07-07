@@ -1,5 +1,6 @@
 import React from 'react'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import axios from 'axios'
 
 const CreateUser = () => {
 
@@ -24,13 +25,19 @@ const CreateUser = () => {
     e.preventDefault();
     
     const user ={
-      name : name,
-      surname : surname,
+      ime : name,
+      prezime : surname,
       email : email
     }
 
     console.log(user)
-    
+
+    axios.post('http://localhost:5000/users/add/', user)
+      .then(res => console.log(res.data));
+
+      setName("");
+      setSurname("");
+      setEmail("");
   }
 
 
