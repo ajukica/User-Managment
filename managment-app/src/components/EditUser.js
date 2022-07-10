@@ -1,12 +1,28 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
+import { useParams } from "react-router-dom";
 import axios from 'axios'
 
-const CreateUser = () => {
+const EditUser = () => {
 
-  const [name,setName] = useState("");
-  const [surname,setSurname] = useState("");
-  const [email,setEmail] = useState("");
+    const {id} = useParams()
+
+    const [users,setUsers] = useState ([]);
+    const [name,setName] = useState("");
+    const [surname,setSurname] = useState("");
+    const [email,setEmail] = useState("");
+
+    useEffect (() => {
+        axios.get('http://localhost:5000/users/' + id)
+            .then(response => {
+                setName(response.data.ime);
+                setSurname(response.data.prezime);
+                setEmail(response.data.email);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        },[]);
 
 
   const onChangeName= (e) => {
@@ -32,7 +48,7 @@ const CreateUser = () => {
 
     console.log(user)
 
-    axios.post('http://localhost:5000/users/add/', user)
+    axios.post('http://localhost:5000/users/update/' + id,user)
       .then(res => console.log(res.data));
 
       setName("");
@@ -42,11 +58,9 @@ const CreateUser = () => {
     window.location = "/";
   }
 
-
-
   return (
     <div>
-        <h3>Create New User</h3>
+        <h3>Edit User</h3>
         <form onSubmit={onSubmit}>
           <div className="form-group"> 
             <label>Name: </label>
@@ -72,7 +86,7 @@ const CreateUser = () => {
                 />
           </div>
           <div className="form-group">
-            <input type="submit" value="Create User" className="btn btn-primary" />
+            <input type="submit" value="Edit User" className="btn btn-primary" />
           </div>
         </form>
       </div>
@@ -80,4 +94,4 @@ const CreateUser = () => {
   )
 }
 
-export default CreateUser
+export default EditUser
